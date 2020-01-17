@@ -22,3 +22,19 @@ done
 plink --bfile ${bfile_list[0]} --merge-list merge_file_list.txt --make-bed --out merged
 ```
 
+# Extracting a subset of SNPs and individuals
+```python
+import pandas as pd
+from os.path import join
+# Extract the first `num_indv` individuals and first `num_snps` SNPs
+def extract_plink_subset(bfile, num_indv, num_snps, out_dir='./'):
+    famid = pd.read_csv(bfile + '.fam', delim_whitespace=True, header=None)[0]
+    snpid = pd.read_csv(bfile + '.bim', delim_whitespace=True, header=None)[1]
+    
+    famid[0:num_indv].to_csv(join(out_dir, 'subset.indv'), index=False, header=None)
+    snpid[0:num_snps].to_csv(join(out_dir, 'subset.snp'), index=False, header=None)
+```
+```bash
+# use plink to get the genotype
+plink --bfile ${bfile} --extract ./subset.snp --keep-fam ./subset.indv --make-bed --out ${out_bfile}
+```
