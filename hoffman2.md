@@ -17,3 +17,15 @@ For qsub:
 -pe (parallel environment: multi-core, multi-thread, multi-node)
 -t n [-m:s]] (submit a job array)
 ```
+
+# Update timestamps
+The hoffman2 scratch space will delete all files that are not updated in 14 days. So every two weeks (preferably once each week)
+```
+#!/bin/sh
+#$ -l h_data=20G,h_rt=12:00:00,highp
+#$ -cwd
+#$ -j y
+#$ -o ./job_out
+
+find  -type f  -exec touch {} +
+```
